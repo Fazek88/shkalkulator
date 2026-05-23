@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Sunshade kalkulátor</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sunshade">
+    
+    <style>
+        :root {
+            --bg-color: #f2f2f7;
+            --card-bg: #ffffff;
+            --text-color: #1c1c1e;
+            --text-secondary: #68686e;
+            --accent-color: #007aff;
+            --input-bg: #f2f2f7;
+            --border-color: #c7c7cc;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :not(html) {
+                --bg-color: #000000;
+                --card-bg: #1c1c1e;
+                --text-color: #ffffff;
+                --text-secondary: #aeaea3;
+                --accent-color: #0a84ff;
+                --input-bg: #2c2c2e;
+                --border-color: #3a3a3c;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 380px;
+            box-sizing: border-box;
+            margin-top: 40px;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 0 0 20px 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 17px;
+            box-sizing: border-box;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--accent-color);
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 16px;
+            margin-top: 10px;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button:active {
+            opacity: 0.8;
+        }
+
+        #result {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 18px;
+            color: #34c759;
+            font-weight: 600;
+            white-space: pre-line;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Sunshade kalkulátor</h2>
+    
+    <div class="input-group">
+        <label>Szélesség (cm):</label>
+        <input type="number" id="width" pattern="[0-9]*" inputmode="decimal" placeholder="0">
+    </div>
+
+    <div class="input-group">
+        <label>Magasság (cm):</label>
+        <input type="number" id="height" pattern="[0-9]*" inputmode="decimal" placeholder="0">
+    </div>
+
+    <div class="input-group">
+        <label>Ár (Ft / m²):</label>
+        <input type="number" id="price" pattern="[0-9]*" inputmode="numeric" placeholder="0">
+    </div>
+
+    <button onclick="calculatePrice()">Számítás</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+function calculatePrice() {
+    const width = parseFloat(document.getElementById('width').value);
+    const height = parseFloat(document.getElementById('height').value);
+    const pricePerM2 = parseFloat(document.getElementById('price').value);
+
+    if (isNaN(width) || isNaN(height) || isNaN(pricePerM2)) {
+        alert("Kérlek, tölts ki minden mezőt számokkal!");
+        return;
+    }
+
+    let sqm = (width * height) / 10000;
+    sqm = Math.max(sqm, 1.3);
+    const totalPrice = sqm * pricePerM2;
+
+    document.getElementById('result').innerText = 
+        `Számított méret: ${sqm.toFixed(2)} m²\nVégső ár: ${Math.round(totalPrice).toLocaleString('hu-HU')} Ft`;
+}
+</script>
+
+</body>
+</html>
