@@ -65,13 +65,13 @@
     <h2>Négyzetméter kalkulátor</h2>
     
     <label for="width">Szélesség (cm):</label>
-    <input type="number" id="width" step="any">
+    <input type="number" id="width" step="any" inputmode="decimal">
 
     <label for="height">Magasság (cm):</label>
-    <input type="number" id="height" step="any">
+    <input type="number" id="height" step="any" inputmode="decimal">
 
     <label for="price">Ár (egységár / m²):</label>
-    <input type="number" id="price" step="any">
+    <input type="number" id="price" step="any" inputmode="decimal">
 
     <button onclick="calculatePrice()">Számítás</button>
 
@@ -80,30 +80,33 @@
 
 <script>
 function calculatePrice() {
-    const width = parseFloat(document.getElementById('width').value);
-    const height = parseFloat(document.getElementById('height').value);
-    const pricePerM2 = parseFloat(document.getElementById('price').value);
+    // Kiolvassuk az értékeket, és a biztonság kedvéért a vesszőket pontra cseréljük a háttérben
+    let widthRaw = document.getElementById('width').value.replace(',', '.');
+    let heightRaw = document.getElementById('height').value.replace(',', '.');
+    let priceRaw = document.getElementById('price').value.replace(',', '.');
 
-    // Ellenőrizzük, hogy minden mező ki van-e töltve számmal
+    const width = parseFloat(widthRaw);
+    const height = parseFloat(heightRaw);
+    const pricePerM2 = parseFloat(priceRaw);
+
     if (isNaN(width) || isNaN(height) || isNaN(pricePerM2)) {
         alert("Kérlek, csak számokat adj meg minden mezőben!");
         return;
     }
 
     let sqm = (width * height) / 10000;
-    sqm = Math.max(sqm, 1.3); // Minimum 1.3 m2
+    sqm = Math.max(sqm, 1.3);
     
     const totalPrice = sqm * pricePerM2;
     let priceText = "";
 
-    // Ellenőrizzük, hogy egész szám-e (ha osztható 1-gyel maradék nélkül)
     if (totalPrice % 1 === 0) {
         priceText = totalPrice.toFixed(0) + " Ft";
     } else {
-        priceText = totalPrice.toFixed(4) + " EUR";
+        priceText = totalPrice.toFixed(2) + " EUR";
     }
 
-    document.getElementById('result').innerText =
+    document.getElementById('result').innerText = 
         `Számított méret: ${sqm.toFixed(2)} m²\nVégső ár: ${priceText}`;
 }
 </script>
